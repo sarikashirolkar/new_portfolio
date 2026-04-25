@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useTheme } from "next-themes";
 
@@ -17,11 +17,17 @@ const fragmentShader = /* glsl */ `
   precision highp float;
   varying vec2 vUv;
   uniform float uTime;
-  uniform float uTheme; // 0 dark, 1 light
-  uniform vec2 uResolution;
-  uniform float uScroll;
+  uniform float uTheme;   // 0 dark, 1 light
+  uniform float uScroll;  // 0..1
+  uniform vec2  uResolution;
 
-  // 2D simplex noise — Ashima Arts
+  // ---- Hash + noise utils ----
+  float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -61,69 +67,135 @@ const fragmentShader = /* glsl */ `
     return v;
   }
 
+  // ---- Aurora ribbon ----
+  float ribbon(vec2 uv, float yOffset, float freq, float speed, float thickness, float t) {
+    float curve = sin(uv.x * freq + t * speed) * 0.06
+                + sin(uv.x * freq * 1.7 - t * speed * 0.6) * 0.04
+                + fbm(vec2(uv.x * 2.0 + t * 0.1, t * 0.05)) * 0.06;
+    float band = 1.0 - smoothstep(0.0, thickness, abs(uv.y - yOffset - curve));
+    return band;
+  }
+
+  // ---- Mountain heights — multiple layers ----
+  float mountains(float x, float seed, float scale) {
+    float h = fbm(vec2(x * scale + seed, seed * 1.7)) * 0.5 + 0.5;
+    h += fbm(vec2(x * scale * 3.5 + seed, seed * 2.1)) * 0.15;
+    return h;
+  }
+
+  // ---- Stars ----
+  float stars(vec2 uv, float t) {
+    vec2 grid = floor(uv * 320.0);
+    float h = hash21(grid);
+    float pulse = 0.5 + 0.5 * sin(t * 1.5 + h * 30.0);
+    return step(0.997, h) * pulse * 1.2;
+  }
+
   void main() {
     vec2 uv = vUv;
-    float t = uTime * 0.06;
+    float t = uTime * 0.05;
     float scroll = uScroll;
 
-    // Dark theme palette
-    vec3 dBg     = vec3(0.031, 0.063, 0.165);   // deep navy #08102a
-    vec3 dMint   = vec3(0.498, 0.925, 0.757);   // #7fecc1
-    vec3 dTeal   = vec3(0.227, 0.722, 0.659);   // teal
-    vec3 dViolet = vec3(0.427, 0.290, 0.839);   // violet
-    vec3 dPurple = vec3(0.753, 0.518, 0.988);   // light purple
-    vec3 dRoyal  = vec3(0.110, 0.204, 0.408);   // royal blue
+    // ===== Palette =====
+    // Dark theme — Polaris-style night
+    vec3 dSkyTop    = vec3(0.020, 0.039, 0.082);  // near-black navy
+    vec3 dSkyMid    = vec3(0.027, 0.090, 0.133);  // teal-tinted
+    vec3 dSkyHorizon= vec3(0.039, 0.180, 0.165);  // moss-teal horizon glow
+    vec3 dAuroraGreen = vec3(0.318, 1.000, 0.616); // neon mint #51ff9d
+    vec3 dAuroraTeal  = vec3(0.114, 0.749, 0.612); // teal
+    vec3 dAuroraPurple= vec3(0.612, 0.451, 0.953); // violet
+    vec3 dMountain   = vec3(0.020, 0.047, 0.078);  // very dark blue
+    vec3 dMountain2  = vec3(0.043, 0.094, 0.122);  // slightly lighter
 
-    // Light theme palette (dawn aurora)
-    vec3 lBg     = vec3(0.941, 0.957, 1.000);
-    vec3 lMint   = vec3(0.380, 0.875, 0.722);
-    vec3 lTeal   = vec3(0.620, 0.890, 0.973);
-    vec3 lViolet = vec3(0.650, 0.510, 0.890);
-    vec3 lPurple = vec3(0.961, 0.722, 0.838);
-    vec3 lRoyal  = vec3(0.776, 0.847, 1.000);
+    // Light theme — dawn aurora
+    vec3 lSkyTop    = vec3(0.937, 0.859, 0.961);
+    vec3 lSkyMid    = vec3(0.871, 0.918, 0.973);
+    vec3 lSkyHorizon= vec3(0.788, 0.929, 0.890);
+    vec3 lAuroraGreen = vec3(0.380, 0.886, 0.722);
+    vec3 lAuroraTeal  = vec3(0.494, 0.769, 0.918);
+    vec3 lAuroraPurple= vec3(0.737, 0.580, 0.910);
+    vec3 lMountain   = vec3(0.502, 0.553, 0.671);
+    vec3 lMountain2  = vec3(0.380, 0.439, 0.557);
 
-    vec3 cBg     = mix(dBg,     lBg,     uTheme);
-    vec3 cMint   = mix(dMint,   lMint,   uTheme);
-    vec3 cTeal   = mix(dTeal,   lTeal,   uTheme);
-    vec3 cViolet = mix(dViolet, lViolet, uTheme);
-    vec3 cPurple = mix(dPurple, lPurple, uTheme);
-    vec3 cRoyal  = mix(dRoyal,  lRoyal,  uTheme);
+    vec3 SkyTop      = mix(dSkyTop,       lSkyTop,       uTheme);
+    vec3 SkyMid      = mix(dSkyMid,       lSkyMid,       uTheme);
+    vec3 SkyHorizon  = mix(dSkyHorizon,   lSkyHorizon,   uTheme);
+    vec3 AuroraGreen = mix(dAuroraGreen,  lAuroraGreen,  uTheme);
+    vec3 AuroraTeal  = mix(dAuroraTeal,   lAuroraTeal,   uTheme);
+    vec3 AuroraPurple= mix(dAuroraPurple, lAuroraPurple, uTheme);
+    vec3 Mountain    = mix(dMountain,     lMountain,     uTheme);
+    vec3 Mountain2   = mix(dMountain2,    lMountain2,    uTheme);
 
-    // Vertical gradient base
-    vec3 base = mix(cBg, cRoyal, smoothstep(0.0, 1.0, 1.0 - uv.y));
-    base = mix(base, cBg, 0.4);
+    // ===== Sky gradient =====
+    float skyMix = smoothstep(0.0, 1.0, uv.y);
+    vec3 sky = mix(SkyHorizon, SkyMid, smoothstep(0.0, 0.5, skyMix));
+    sky = mix(sky, SkyTop, smoothstep(0.4, 1.0, skyMix));
 
-    // Aurora bands — flowing curtains
-    vec2 p = uv;
-    p.y -= 0.1 - scroll * 0.15;
-    float n1 = fbm(vec2(p.x * 2.5 + t, p.y * 1.2 - t * 0.8));
-    float n2 = fbm(vec2(p.x * 4.0 - t * 1.3, p.y * 2.0 + t * 0.6));
-    float n3 = fbm(vec2(p.x * 1.6 + t * 0.5, p.y * 3.0 - t * 0.4));
+    // ===== Stars (dark mode) =====
+    float st = stars(uv * vec2(2.4, 1.4) + vec2(scroll * 0.3, scroll * 0.6), uTime);
+    sky += st * (1.0 - uTheme) * vec3(0.85, 0.95, 1.0);
 
-    float band1 = smoothstep(0.05, 0.55, uv.y) * smoothstep(1.0, 0.5, uv.y);
-    band1 *= 0.5 + 0.5 * sin(uv.x * 3.0 + n1 * 2.5 + t * 1.5);
-    band1 *= (0.6 + 0.4 * n2);
+    // ===== Aurora ribbons — concentrated upper-half =====
+    // ribbons drift left-right with scroll for parallax feel
+    float scrollPan = scroll * 0.4;
+    vec2 auv = uv;
+    auv.x += scrollPan;
 
-    float band2 = smoothstep(0.2, 0.7, uv.y) * smoothstep(1.0, 0.6, uv.y);
-    band2 *= 0.5 + 0.5 * sin(uv.x * 2.0 - n2 * 3.0 + t * 0.9);
-    band2 *= (0.5 + 0.5 * n3);
+    float r1 = ribbon(auv, 0.78, 4.0,  1.4, 0.18, t);
+    float r2 = ribbon(auv, 0.62, 6.0,  0.9, 0.14, t * 1.2 + 1.0);
+    float r3 = ribbon(auv, 0.88, 3.0,  0.7, 0.22, t * 0.8 + 2.5);
+    float r4 = ribbon(auv, 0.55, 8.0, -1.1, 0.10, t * 1.5);
+    float r5 = ribbon(auv + vec2(scroll * 0.2, 0.0), 0.72, 5.0, 1.9, 0.08, t * 2.0);
 
-    float band3 = smoothstep(0.0, 0.4, uv.y) * smoothstep(0.8, 0.3, uv.y);
-    band3 *= 0.5 + 0.5 * sin(uv.x * 5.0 + n3 * 2.0 - t * 2.0);
+    // Vertical falloff so ribbons are stronger high-up
+    float upperMask = smoothstep(0.35, 0.95, uv.y) * smoothstep(1.05, 0.55, uv.y) * 1.4;
 
-    vec3 color = base;
-    color = mix(color, cMint, clamp(band1 * 0.85, 0.0, 1.0));
-    color = mix(color, cTeal, clamp(band1 * band2 * 1.2, 0.0, 1.0));
-    color = mix(color, cViolet, clamp(band2 * 0.6, 0.0, 1.0));
-    color = mix(color, cPurple, clamp(band3 * band2 * 1.4, 0.0, 1.0));
+    // FBM-based brightness modulation
+    float mod1 = fbm(vec2(uv.x * 3.0 + t * 0.4, uv.y * 2.0 - t * 0.2));
+    float mod2 = fbm(vec2(uv.x * 6.0 - t * 0.3, uv.y * 3.0 + t * 0.15));
 
-    // Subtle vignette
-    float vig = smoothstep(1.4, 0.4, length(uv - 0.5));
-    color *= mix(0.85, 1.0, vig);
+    float greenAurora = (r1 * 1.0 + r3 * 0.7 + r5 * 0.6) * upperMask * (0.6 + 0.7 * mod1);
+    float tealAurora  = (r2 * 0.9 + r4 * 0.6) * upperMask * (0.5 + 0.6 * mod2);
+    float purpleHaze  = smoothstep(0.5, 1.0, uv.y) * smoothstep(1.1, 0.8, uv.y) * (0.3 + 0.4 * mod1);
 
-    // Stars (dark mode only)
-    float starField = step(0.997, fract(sin(dot(floor(uv * 800.0), vec2(12.9898, 78.233))) * 43758.5453));
-    color += starField * (1.0 - uTheme) * 0.9;
+    // Scroll intensifies aurora
+    float scrollIntensity = 1.0 + scroll * 0.5;
+    greenAurora *= scrollIntensity;
+    tealAurora  *= scrollIntensity;
+
+    // Bloom-like glow
+    vec3 color = sky;
+    color = mix(color, AuroraTeal,   clamp(tealAurora, 0.0, 1.0));
+    color = mix(color, AuroraGreen,  clamp(greenAurora, 0.0, 1.0));
+    color = mix(color, AuroraPurple, clamp(purpleHaze * 0.4, 0.0, 1.0));
+
+    // Aurora reflection on horizon (very subtle green tint near horizon)
+    float horizonGlow = smoothstep(0.3, 0.0, uv.y) * 0.25;
+    color += AuroraGreen * horizonGlow * (1.0 - uTheme);
+
+    // ===== Mountains — three parallax layers =====
+    // Each layer has its own scroll-driven Y offset
+    // Far layer
+    float farX = uv.x * 1.0 + scroll * 0.05;
+    float farH = mountains(farX, 11.7, 1.2) * 0.18 + 0.16 - scroll * 0.04;
+    float farMask = step(uv.y, farH);
+    color = mix(color, Mountain2 * 1.4, farMask * 0.55);
+
+    // Mid layer
+    float midX = uv.x * 1.4 + scroll * 0.10 - 1.5;
+    float midH = mountains(midX, 7.3, 1.6) * 0.22 + 0.10 - scroll * 0.07;
+    float midMask = step(uv.y, midH);
+    color = mix(color, Mountain * 1.2, midMask * 0.85);
+
+    // Near layer (sharpest, darkest)
+    float nearX = uv.x * 1.9 + scroll * 0.18 + 0.7;
+    float nearH = mountains(nearX, 3.1, 2.2) * 0.20 + 0.04 - scroll * 0.10;
+    float nearMask = step(uv.y, nearH);
+    color = mix(color, Mountain, nearMask);
+
+    // ===== Subtle vignette =====
+    float vig = smoothstep(1.5, 0.4, length(uv - vec2(0.5, 0.55)));
+    color *= mix(0.8, 1.0, vig);
 
     gl_FragColor = vec4(color, 1.0);
   }
@@ -177,16 +249,15 @@ function AuroraPlane({ scrollRef }: { scrollRef: React.MutableRefObject<number> 
 export function AuroraCanvas() {
   const scrollRef = useRef(0);
 
-  if (typeof window !== "undefined") {
-    window.addEventListener(
-      "scroll",
-      () => {
-        const max = document.body.scrollHeight - window.innerHeight;
-        scrollRef.current = max > 0 ? window.scrollY / max : 0;
-      },
-      { passive: true }
-    );
-  }
+  useEffect(() => {
+    function onScroll() {
+      const max = document.body.scrollHeight - window.innerHeight;
+      scrollRef.current = max > 0 ? window.scrollY / max : 0;
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
@@ -198,7 +269,6 @@ export function AuroraCanvas() {
       >
         <AuroraPlane scrollRef={scrollRef} />
       </Canvas>
-      <div className="absolute inset-0 starfield opacity-40 mix-blend-screen" />
     </div>
   );
 }
