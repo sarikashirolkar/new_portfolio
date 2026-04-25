@@ -1,4 +1,4 @@
-import { AuroraCanvas } from "@/components/AuroraCanvas";
+import { FlowerCanvas } from "@/components/FlowerCanvas";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
@@ -13,7 +13,7 @@ import { Chatbot } from "@/components/Chatbot";
 export default function Home() {
   return (
     <main className="relative">
-      <AuroraCanvas />
+      <FlowerCanvas />
       <Navbar />
       <Hero />
       <About />
