@@ -12,7 +12,7 @@ import { Chatbot } from "@/components/Chatbot";
 
 export default function Home() {
   return (
-    <main className="relative">
+    <main className="relative isolate">
       <FlowerCanvas />
       <Navbar />
       <Hero />

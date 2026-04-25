@@ -132,7 +132,7 @@ export function FlowerCanvas() {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
       <div ref={rootRef} className="absolute inset-0" />
     </div>
   );
