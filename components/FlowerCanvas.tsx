@@ -56,7 +56,7 @@ const LOOP_SEC = 28;
 const DRIFT = 1;
 const PARALLAX = 1;
 const SIZE_SCALE = 1;
-const OPACITY_SCALE = 1;
+const OPACITY_SCALE = 1.35;
 
 export function FlowerCanvas() {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -75,7 +75,7 @@ export function FlowerCanvas() {
       img.alt = "";
       img.draggable = false;
       img.style.cssText =
-        "position:absolute;left:0;top:0;will-change:transform,opacity,filter;user-select:none;opacity:0;mix-blend-mode:screen;";
+        "position:absolute;left:0;top:0;will-change:transform,opacity,filter;user-select:none;opacity:0;";
       root.appendChild(img);
       nodes[placement.id] = img;
     }
@@ -116,7 +116,7 @@ export function FlowerCanvas() {
         node.style.width = `${sizePx}px`;
         node.style.height = "auto";
         node.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${rotLoop + scrollRot}deg) scale(${breath})`;
-        node.style.opacity = String(placement.opacity * OPACITY_SCALE * scrollFade);
+        node.style.opacity = String(Math.min(1, placement.opacity * OPACITY_SCALE * scrollFade));
         node.style.filter = placement.blur > 0 ? `blur(${placement.blur}px)` : "";
       }
 
@@ -133,29 +133,7 @@ export function FlowerCanvas() {
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, #0a1530 0%, #050b1c 55%, #02050f 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(56,232,178,0.04) 0%, rgba(139,92,246,0.05) 50%, rgba(8,16,42,0.4) 100%)",
-          mixBlendMode: "screen",
-        }}
-      />
       <div ref={rootRef} className="absolute inset-0" />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(5,11,28,0.55) 100%)",
-        }}
-      />
     </div>
   );
 }
