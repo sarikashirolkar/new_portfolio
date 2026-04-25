@@ -1,5 +1,5 @@
 export const personal = {
-  name: "Sarika S Shirolkar",
+  name: "Sarika Shirolkar",
   role: "AI Engineer & Builder",
   location: "Bengaluru, KA",
   email: "sarikashirolkar@gmail.com",

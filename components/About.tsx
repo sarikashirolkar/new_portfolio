@@ -43,7 +43,7 @@ export function About() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/headshot.png"
-              alt="Sarika S Shirolkar"
+              alt="Sarika Shirolkar"
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div

@@ -64,7 +64,7 @@ export function Contact() {
 
         <div className="mt-24 pt-8 section-divider" />
         <div className="mt-8 text-xs font-mono" style={{ color: "var(--fg-soft)" }}>
-          © {new Date().getFullYear()} Sarika S Shirolkar · Built with Next.js, Three.js & a lot of aurora.
+          © {new Date().getFullYear()} Sarika Shirolkar · Built with Next.js, Three.js & a lot of aurora.
         </div>
       </div>
     </section>

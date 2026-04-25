@@ -1,4 +1,4 @@
-# Sarika S Shirolkar — Portfolio
+# Sarika Shirolkar — Portfolio
 
 Aurora-borealis themed portfolio for [sarika.aiworkflowautomate.com](https://sarika.aiworkflowautomate.com).
 

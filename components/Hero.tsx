@@ -40,7 +40,7 @@ export function Hero() {
         >
           <span className="aurora-text">Sarika</span>
           <br />
-          <span style={{ color: "var(--fg)" }}>S Shirolkar</span>
+          <span style={{ color: "var(--fg)" }}>Shirolkar</span>
         </motion.h1>
 
         <motion.p
