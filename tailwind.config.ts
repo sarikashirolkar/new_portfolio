@@ -19,10 +19,10 @@ const config: Config = {
       },
       fontFamily: {
         name: ["var(--font-name)", "Arial", "Helvetica", "sans-serif"],
-        display: ["var(--font-display)", "Arial", "Helvetica", "sans-serif"],
-        accent: ["var(--font-accent)", "Arial", "Helvetica", "sans-serif"],
+        display: ["var(--font-display)", "Times New Roman", "Times", "serif"],
+        accent: ["var(--font-accent)", "Times New Roman", "Times", "serif"],
         sans: ["var(--font-sans)", "Times New Roman", "Times", "serif"],
-        mono: ["var(--font-mono)", "Arial", "Helvetica", "sans-serif"],
+        mono: ["var(--font-mono)", "Times New Roman", "Times", "serif"],
       },
       animation: {
         "aurora-shift": "auroraShift 18s ease-in-out infinite",

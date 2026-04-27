@@ -101,10 +101,10 @@
   --border: rgba(56, 232, 178, 0.18);
   --card: rgba(10, 20, 45, 0.65);
   --font-name: "Nectarine", Arial, Helvetica, sans-serif;
-  --font-display: Arial, Helvetica, sans-serif;
-  --font-accent: Arial, Helvetica, sans-serif;
+  --font-display: "Silver Garden", "Times New Roman", Times, serif;
+  --font-accent: "Silver Garden", "Times New Roman", Times, serif;
   --font-sans: "Times New Roman", Times, serif;
-  --font-mono: Arial, Helvetica, sans-serif;
+  --font-mono: "Silver Garden", "Times New Roman", Times, serif;
 }
 
 .light {
