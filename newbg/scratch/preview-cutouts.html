@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>cutouts</title>
+<style>
+  body{margin:0;background:#050b1c;color:#e8efff;font-family:ui-monospace,monospace;padding:20px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .cell{background:#0a1530;border:1px solid #1a2a52;padding:10px;border-radius:8px;text-align:center;font-size:11px}
+  .cell img{max-width:100%;height:160px;object-fit:contain;display:block;margin:0 auto 6px}
+</style></head><body>
+<h2>Flower cutouts (alpha-keyed)</h2>
+<div class="grid" id="g"></div>
+<script>
+const flowers = [
+  'white-sakura-1','white-sakura-2','pink-sakura-1','pink-sakura-2',
+  'emerald-large-1','emerald-large-2','emerald-large-3',
+  'teal-fractal-1','teal-fractal-2',
+  'magenta-fractal-1','magenta-fractal-2',
+];
+document.getElementById('g').innerHTML = flowers.map(n => `
+  <div class="cell">
+    <img src="../src/flowers/${n}.png" alt="${n}">
+    <div>${n}</div>
+  </div>`).join('');
+</script>
+</body></html>

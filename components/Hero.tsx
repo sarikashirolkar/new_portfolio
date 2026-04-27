@@ -3,85 +3,118 @@
 import { motion } from "framer-motion";
 import { ArrowDown, Sparkles } from "lucide-react";
 import { personal } from "@/lib/data";
-import { Chatbot } from "./Chatbot";
 
 export function Hero() {
   return (
-    <section id="top" className="relative min-h-screen px-6 pb-10 pt-28 lg:pt-36">
-      <div className="max-w-7xl mx-auto min-h-[calc(100vh-9rem)] flex flex-col">
-        <div className="grid flex-1 gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:grid-rows-[auto_1fr]">
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="order-2 lg:order-1 lg:row-span-2"
-          >
-            <div className="glass h-full min-h-[420px] overflow-hidden rounded-[28px] border border-[color:var(--border)] p-3 lg:min-h-[720px]">
-              <div className="relative h-full overflow-hidden rounded-[22px]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/headshot.png"
-                  alt="Sarika Shirolkar"
-                  className="h-full w-full object-cover"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(2,5,15,0.02) 0%, rgba(2,5,15,0.18) 100%)",
-                  }}
-                />
-              </div>
-            </div>
-          </motion.div>
-
+    <section
+      id="top"
+      className="relative min-h-screen px-5 pb-10 pt-24 md:px-8 lg:pt-28"
+    >
+      <div className="mx-auto flex min-h-[calc(100vh-7rem)] max-w-6xl flex-col justify-center">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_1fr]">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.1, ease: "easeOut" }}
-            className="order-1 lg:order-2"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="order-2 lg:order-1"
           >
-            <div className="glass rounded-[28px] border border-[color:var(--border)] p-7 md:p-9">
-              <div className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm" style={{ borderColor: "var(--border)" }}>
-                <Sparkles className="h-4 w-4" style={{ color: "var(--accent)" }} />
-                <span style={{ color: "var(--fg-soft)" }}>
+            <div className="max-w-[44rem]">
+              <div
+                className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-sm"
+                style={{
+                  borderColor: "rgba(56, 232, 178, 0.28)",
+                  background: "rgba(6, 14, 34, 0.18)",
+                  boxShadow:
+                    "0 0 28px rgba(56, 232, 178, 0.08), inset 0 0 24px rgba(6, 14, 34, 0.18)",
+                }}
+              >
+                <Sparkles
+                  className="h-4 w-4"
+                  style={{
+                    color: "var(--accent)",
+                    filter: "drop-shadow(0 0 10px rgba(56, 232, 178, 0.6))",
+                  }}
+                />
+                <span
+                  style={{
+                    color: "var(--fg)",
+                    textShadow: "0 0 18px rgba(255,255,255,0.12)",
+                  }}
+                >
                   Available for AI engineering roles · {personal.location}
                 </span>
               </div>
 
-              <div className="mt-7 space-y-4">
-                <h1 className="font-display text-5xl font-bold tracking-tight md:text-6xl xl:text-7xl" style={{ color: "var(--fg)" }}>
-                  Sarika Shirolkar
-                </h1>
-                <p className="max-w-xl font-display text-2xl leading-tight md:text-[2rem]" style={{ color: "var(--fg-soft)" }}>
-                  AI engineer building AI that actually works.
-                </p>
-                <p className="max-w-2xl text-base leading-7 md:text-lg" style={{ color: "var(--fg-soft)" }}>
-                  {personal.about}
-                </p>
-              </div>
+              <h1
+                className="mt-8 font-display text-6xl font-bold leading-[0.98] tracking-tight md:text-7xl xl:text-[7rem]"
+                style={{
+                  color: "var(--fg)",
+                  textShadow:
+                    "0 0 30px rgba(8, 16, 42, 0.9), 0 0 70px rgba(139, 92, 246, 0.18)",
+                }}
+              >
+                <span
+                  className="aurora-text"
+                  style={{
+                    filter:
+                      "drop-shadow(0 0 22px rgba(139, 92, 246, 0.26)) drop-shadow(0 0 40px rgba(56, 232, 178, 0.12))",
+                  }}
+                >
+                  Sarika
+                </span>
+                <br />
+                <span>Shirolkar</span>
+              </h1>
+
+              <p
+                className="mt-5 font-display text-3xl leading-tight md:text-4xl"
+                style={{
+                  color: "var(--fg)",
+                  textShadow: "0 0 26px rgba(8, 16, 42, 0.85)",
+                }}
+              >
+                AI Engineer
+              </p>
+
+              <p
+                className="mt-4 max-w-lg text-lg leading-relaxed md:text-xl"
+                style={{
+                  color: "rgba(232, 239, 255, 0.92)",
+                  textShadow: "0 0 22px rgba(8, 16, 42, 0.9)",
+                }}
+              >
+                Building AI systems that actually work.
+              </p>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.2, ease: "easeOut" }}
-            className="order-3 lg:order-3"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
+            className="order-1 flex justify-center lg:order-2 lg:justify-end"
           >
-            <div className="glass flex min-h-[340px] flex-col rounded-[28px] border border-[color:var(--border)] p-4 md:p-5 lg:min-h-[360px]">
-              <div className="mb-3 px-2">
-                <div className="font-display text-lg font-semibold" style={{ color: "var(--fg)" }}>
-                  RAG chatbot
-                </div>
-                <div className="text-sm" style={{ color: "var(--fg-soft)" }}>
-                  Ask about projects, experience, shipped work, and fit.
-                </div>
-              </div>
-              <div className="min-h-0 flex-1">
-                <Chatbot embedded />
-              </div>
-            </div>
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/headshot_withoutbg.png"
+                alt="Sarika Shirolkar"
+                className="relative z-10 h-auto w-[300px] select-none md:w-[390px] lg:w-[480px] xl:w-[540px]"
+                draggable={false}
+                style={{
+                  filter:
+                    "drop-shadow(0 30px 60px rgba(127,236,193,0.18)) drop-shadow(0 12px 24px rgba(139,92,246,0.20))",
+                }}
+              />
+            </motion.div>
           </motion.div>
         </div>
 
@@ -89,7 +122,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="mt-8 flex flex-col items-center gap-2 pb-2"
+          className="mt-10 flex flex-col items-center gap-2"
           style={{ color: "var(--fg-soft)" }}
         >
           <span className="text-xs uppercase tracking-[0.28em]">Scroll</span>

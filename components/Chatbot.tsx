@@ -1,64 +1,184 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { MessageSquare, Send, Sparkles, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { Send, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-type Message = { role: "user" | "assistant"; content: string };
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+  images?: { src: string; alt: string }[];
+};
 
 type ChatbotProps = {
   embedded?: boolean;
 };
 
 const SUGGESTIONS = [
-  "What has Sarika shipped?",
-  "Tell me about her IEEE paper",
-  "Is she a good fit for an AI engineer role?",
-  "What's her experience with agentic AI?",
+  "Tell me about Sarika's hackathon wins",
+  "Give me a quick introduction about Sarika",
+  "What does Sarika do at AI Workflow Automation",
+  "Tell me about Sarika's IEEE research paper",
+  "What are Sarika's skills and tech stack",
+  "What are Sarika's hobbies and interests",
 ];
 
 const GREETING: Message = {
   role: "assistant",
   content:
-    "Hi. Ask me about Sarika's shipped products, research, hackathon wins, stack, or fit for a role.",
+    "Hey! I'm Sarika's assistant. Ask me anything about what her tech brain has been building!",
 };
 
+const CHAT_API_URL =
+  process.env.NEXT_PUBLIC_CHAT_API_URL ||
+  "/api/chat";
+
+const faqs = [
+  {
+    id: "intro",
+    match: ["who are you", "tell me about yourself", "introduce yourself", "quick introduction", "summary"],
+    answer:
+      "Sarika S Shirolkar is an AI engineer and builder focused on agentic AI, LLM systems, ML workflows, and cloud deployment. She ships practical AI products, including Linkyro, voice scheduling agents, and computer vision research.",
+  },
+  {
+    id: "current-role",
+    match: ["current job", "where do you work", "ai workflow automate", "what does sarika do at ai workflow automation", "a2w"],
+    answer:
+      "Sarika works at AI Workflow Automate, building AI-native products end-to-end: voice agents, LLM workflows, automation systems, evaluation loops, and production cloud deployments.",
+  },
+  {
+    id: "voice-agent",
+    match: ["voice agent", "retell", "n8n", "google calendar", "appointment", "dental clinic"],
+    answer:
+      "Sarika built an AI voice scheduling agent using Retell AI, n8n, and Google Calendar. It can book, reschedule, cancel appointments, and check availability through phone calls while syncing calendar updates in real time.",
+  },
+  {
+    id: "ieee-paper",
+    match: ["ieee", "paper", "publication", "research", "yolov8", "object detection"],
+    answer:
+      "Sarika's IEEE research focuses on YOLOv8-based real-time object detection under adverse weather for autonomous systems, with benchmarking, robustness checks, and error analysis.",
+  },
+  {
+    id: "skills",
+    match: ["skills", "tech stack", "tools", "programming", "what are sarika's skills"],
+    answer:
+      "Sarika's stack includes Python, SQL, JavaScript/TypeScript, LLM orchestration, LangChain, n8n, Retell AI, YOLOv8, OpenCV, scikit-learn, TensorFlow/Keras, Azure, Linux, Docker, Databricks, and Power BI.",
+  },
+  {
+    id: "hackathon-wins",
+    match: ["hackathon", "hackathon wins", "databricks", "hackmarch", "agentic ai hackathon", "prizes"],
+    answer:
+      "Sarika secured 2nd Place at the Databricks Hackathon with Kisan Mitra, a dual-purpose AI assistant for farming families. She also won 1st Place at HackMarch 2.0, an Agentic AI Hackathon, with the Ebbinghaus Adaptive Memory Agent.",
+    images: [
+      { src: "/chatbot/hackathon-databricks.jpg", alt: "Sarika at the Databricks Hackathon" },
+      { src: "/chatbot/hackathon-agenticai.jpg", alt: "Sarika at the Agentic AI Hackathon" },
+    ],
+  },
+  {
+    id: "hobbies",
+    match: ["hobbies", "interests", "fun", "trekking", "outside work"],
+    answer:
+      "Sarika loves trekking and outdoor adventures. She also enjoys attending IEEE, Google Developer Group, and Microsoft events to stay connected with builder communities.",
+    images: [
+      { src: "/chatbot/hobby-trekking.jpg", alt: "Sarika trekking" },
+      { src: "/chatbot/hobby-gdg.jpg", alt: "Sarika at a GDG event" },
+    ],
+  },
+  {
+    id: "contact",
+    match: ["contact", "email", "linkedin", "phone"],
+    answer:
+      "You can reach Sarika at sarikashirolkar@gmail.com or on LinkedIn at linkedin.com/in/sarikashirolkar.",
+  },
+];
+
+const knowledgeDocuments = [
+  "Sarika S Shirolkar is an AI Engineer and builder based in Bengaluru, focused on agentic AI, LLM systems, multimodal ML, and cloud deployment.",
+  "At AI Workflow Automate, Sarika builds AI voice agents, n8n automations, LLM workflows, evaluation pipelines, and production deployments.",
+  "Linkyro is Sarika's solo-built AI-powered Chrome extension for context-aware comment generation using LLMs.",
+  "Sarika's IEEE paper uses YOLOv8 for real-time object detection under adverse weather conditions for autonomous systems.",
+  "Sarika's cloud experience includes Azure Linux VMs, Azure App Service, deployment practices, logging, monitoring, and rollback-friendly releases.",
+  "Sarika's skills include Python, SQL, Java, JavaScript, TypeScript, LangChain, Retell AI, n8n, YOLOv8, OpenCV, TensorFlow, Keras, scikit-learn, Docker, Azure, Databricks, and Power BI.",
+  "Sarika has a CGPA of 9.1 in B.E. CSE AI and ML at Sai Vidya Institute of Technology under VTU.",
+];
+
+const normalizeText = (value: string) =>
+  value.toLowerCase().replace(/\s+/g, " ").trim();
+
+const tokenize = (value: string) =>
+  normalizeText(value).split(/[^a-z0-9+.#-]+/).filter(Boolean);
+
+function findLocalAnswer(question: string): Message | null {
+  const normalized = normalizeText(question);
+  const questionTokens = new Set(tokenize(question));
+
+  let bestFaq: (typeof faqs)[number] | null = null;
+  let bestScore = 0;
+
+  for (const faq of faqs) {
+    for (const phrase of faq.match) {
+      const phraseTokens = tokenize(phrase);
+      let score = normalized.includes(normalizeText(phrase)) ? 6 : 0;
+      for (const token of phraseTokens) {
+        if (questionTokens.has(token)) score += 1;
+      }
+      if (score > bestScore) {
+        bestFaq = faq;
+        bestScore = score;
+      }
+    }
+  }
+
+  if (bestFaq && bestScore >= 3) {
+    return { role: "assistant", content: bestFaq.answer, images: bestFaq.images };
+  }
+
+  const ranked = knowledgeDocuments
+    .map((document) => {
+      const doc = normalizeText(document);
+      let score = 0;
+      for (const token of questionTokens) {
+        if (doc.includes(token)) score += token.length > 4 ? 2 : 1;
+      }
+      return { document, score };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2);
+
+  if (!ranked.length) return null;
+  return {
+    role: "assistant",
+    content: ranked.map((item) => item.document).join(" "),
+  };
+}
+
+function imagesForQuestion(question: string) {
+  const normalized = normalizeText(question);
+  if (normalized.includes("hackathon")) {
+    return faqs.find((faq) => faq.id === "hackathon-wins")?.images;
+  }
+  if (
+    normalized.includes("hobbies") ||
+    normalized.includes("interests") ||
+    normalized.includes("trekking")
+  ) {
+    return faqs.find((faq) => faq.id === "hobbies")?.images;
+  }
+  return undefined;
+}
+
 export function Chatbot({ embedded = false }: ChatbotProps) {
-  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([GREETING]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [heroDocked, setHeroDocked] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, loading, open, heroDocked]);
-
-  useEffect(() => {
-    const updateDocked = () => {
-      const hero = document.getElementById("top");
-      if (!hero) return;
-      const rect = hero.getBoundingClientRect();
-      setHeroDocked(rect.bottom > window.innerHeight * 0.35);
-    };
-
-    updateDocked();
-    window.addEventListener("scroll", updateDocked, { passive: true });
-    window.addEventListener("resize", updateDocked);
-    return () => {
-      window.removeEventListener("scroll", updateDocked);
-      window.removeEventListener("resize", updateDocked);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (heroDocked) {
-      setOpen(false);
-    }
-  }, [heroDocked]);
+  }, [messages, loading]);
 
   async function send(text: string) {
     const trimmed = text.trim();
@@ -69,24 +189,28 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/chat", {
+      const isOldWorker = !CHAT_API_URL.endsWith("/api/chat");
+      const res = await fetch(CHAT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify(isOldWorker ? { question: trimmed } : { messages: next }),
       });
       if (!res.ok) throw new Error("Bad response");
-      const data = (await res.json()) as { reply?: string; error?: string };
+      const data = (await res.json()) as { reply?: string; answer?: string; sources?: string[]; error?: string };
       const reply =
         data.reply ??
+        (data.answer
+          ? `${data.answer}${data.sources?.length ? `\n\nSources: ${data.sources.join(", ")}` : ""}`
+          : undefined) ??
         "Sorry, I had trouble answering that. You can email Sarika directly at sarikashirolkar@gmail.com.";
-      setMessages([...next, { role: "assistant", content: reply }]);
+      setMessages([...next, { role: "assistant", content: reply, images: imagesForQuestion(trimmed) }]);
     } catch {
       setMessages([
         ...next,
         {
           role: "assistant",
           content:
-            "The chatbot is unavailable right now. Reach Sarika at sarikashirolkar@gmail.com if needed.",
+            "The AI chatbot is not configured yet. Add GEMINI_API_KEY in Cloudflare Pages to enable it.",
         },
       ]);
     } finally {
@@ -95,25 +219,25 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
   }
 
   const panel = (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[22px] border" style={{ borderColor: "var(--border)", background: "rgba(6, 14, 34, 0.66)" }}>
-      <div className="flex items-center gap-3 border-b px-5 py-4" style={{ borderColor: "var(--border)" }}>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[18px] border" style={{ borderColor: "var(--border)", background: "rgba(6, 14, 34, 0.58)" }}>
+      <div className="flex items-center gap-2.5 border-b px-4 py-3" style={{ borderColor: "var(--border)" }}>
         <div
-          className="flex h-9 w-9 items-center justify-center rounded-full"
+          className="flex h-8 w-8 flex-none items-center justify-center rounded-full"
           style={{ background: "linear-gradient(135deg, #7fecc1, #6d4ad6)" }}
         >
-          <Sparkles className="h-5 w-5 text-[#08102a]" />
+          <Sparkles className="h-4 w-4 text-[#08102a]" />
         </div>
         <div className="min-w-0">
           <div className="font-display text-sm font-bold" style={{ color: "var(--fg)" }}>
-            Ask about Sarika
+            Sarika&apos;s Assistant — a RAG Chatbot
           </div>
           <div className="text-xs" style={{ color: "var(--fg-soft)" }}>
-            Resume-aware assistant
+            Ask a question or choose a prompt.
           </div>
         </div>
       </div>
 
-      <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-5 py-4">
+      <div ref={scrollRef} className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-4 py-3">
         {messages.map((m, i) => (
           <motion.div
             key={i}
@@ -122,7 +246,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
             className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "rounded-br-sm" : "rounded-bl-sm"}`}
+              className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "rounded-br-sm" : "rounded-bl-sm"}`}
               style={
                 m.role === "user"
                   ? {
@@ -137,6 +261,20 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
               }
             >
               {m.content}
+              {m.images?.length ? (
+                <div className="mt-3 grid gap-2">
+                  {m.images.map((image) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={image.src}
+                      src={image.src}
+                      alt={image.alt}
+                      className="max-h-48 w-full rounded-xl object-cover"
+                      loading="lazy"
+                    />
+                  ))}
+                </div>
+              ) : null}
             </div>
           </motion.div>
         ))}
@@ -161,7 +299,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
         )}
 
         {messages.length === 1 && !loading && (
-          <div className="space-y-2 pt-2">
+          <div className="space-y-1.5 pt-1">
             <div className="text-xs uppercase tracking-[0.2em]" style={{ color: "var(--fg-soft)" }}>
               Suggested prompts
             </div>
@@ -169,7 +307,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
               <button
                 key={s}
                 onClick={() => send(s)}
-                className="w-full rounded-xl px-3 py-2 text-left text-sm transition-colors"
+                className="w-full rounded-xl px-3 py-1.5 text-left text-xs transition-colors md:text-sm"
                 style={{
                   background: "rgba(127,236,193,0.05)",
                   border: "1px solid var(--border)",
@@ -188,77 +326,31 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
           e.preventDefault();
           send(input);
         }}
-        className="flex items-center gap-2 border-t px-3 py-3"
+        className="flex items-center gap-2 border-t px-3 py-2.5"
         style={{ borderColor: "var(--border)" }}
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask anything about Sarika..."
-          className="flex-1 bg-transparent px-3 py-2 text-sm outline-none"
+          className="min-w-0 flex-1 bg-transparent px-2 py-1.5 text-sm outline-none"
           style={{ color: "var(--fg)" }}
           disabled={loading}
         />
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="flex h-9 w-9 items-center justify-center rounded-full disabled:opacity-30"
+          className="flex h-8 w-8 flex-none items-center justify-center rounded-full disabled:opacity-30"
           style={{ background: "linear-gradient(135deg, #7fecc1, #6d4ad6)" }}
         >
-          <Send className="h-4 w-4 text-[#08102a]" />
+          <Send className="h-3.5 w-3.5 text-[#08102a]" />
         </button>
       </form>
     </div>
   );
 
   if (embedded) {
-    return (
-      <>
-        {heroDocked ? (
-          <div className="h-full">{panel}</div>
-        ) : null}
-
-        {!heroDocked ? (
-          <>
-            <motion.button
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              whileHover={{ scale: 1.06 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setOpen((value) => !value)}
-              aria-label={open ? "Close chat" : "Open chat"}
-              className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full glow-accent"
-              style={{ background: "linear-gradient(135deg, #7fecc1, #6d4ad6)" }}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {open ? (
-                  <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
-                    <X className="h-6 w-6 text-[#08102a]" />
-                  </motion.span>
-                ) : (
-                  <motion.span key="chat" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-                    <MessageSquare className="h-6 w-6 text-[#08102a]" />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.button>
-
-            <AnimatePresence>
-              {open ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 20, scale: 0.96 }}
-                  className="fixed bottom-24 right-6 z-50 h-[min(620px,calc(100vh-8rem))] w-[calc(100vw-3rem)] max-w-md"
-                >
-                  {panel}
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </>
-        ) : null}
-      </>
-    );
+    return <div className="h-full">{panel}</div>;
   }
 
   return panel;

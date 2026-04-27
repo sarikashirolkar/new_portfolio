@@ -51,8 +51,8 @@ const TAU = Math.PI * 2;
 const LOOP_SEC = 28;
 const DRIFT = 1;
 const PARALLAX = 1;
-const SIZE_SCALE = 1;
-const OPACITY_SCALE = 1.35;
+const SIZE_SCALE = 1.12;
+const OPACITY_SCALE = 1.45;
 
 export function FlowerCanvas() {
   const rootRef = useRef<HTMLDivElement | null>(null);

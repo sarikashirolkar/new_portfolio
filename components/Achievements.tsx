@@ -1,83 +1,102 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { achievements } from "@/lib/data";
-import { SectionHeading } from "./SectionHeading";
-import { Trophy } from "lucide-react";
+import { Trophy, FileText, GraduationCap, Award, Sparkles } from "lucide-react";
+
+type Item = {
+  icon: typeof Trophy;
+  label: string;
+  detail: string;
+  accent: string;
+};
+
+const ITEMS: Item[] = [
+  {
+    icon: Trophy,
+    label: "Hackathon Wins",
+    detail: "1st — HackMarch 2.0 · 2nd — Databricks",
+    accent: "from-aurora-mint to-aurora-teal",
+  },
+  {
+    icon: FileText,
+    label: "IEEE Publication",
+    detail: "First-author paper on YOLOv8 in adverse weather",
+    accent: "from-aurora-purple to-aurora-violet",
+  },
+  {
+    icon: Award,
+    label: "IEEE CIS Chair",
+    detail: "Led ML workshops + mentored peers",
+    accent: "from-aurora-dawn to-aurora-purple",
+  },
+  {
+    icon: GraduationCap,
+    label: "Volunteered at U&I",
+    detail: "Taught underprivileged kids — community work",
+    accent: "from-aurora-sky to-aurora-mint",
+  },
+];
 
 export function Achievements() {
   return (
-    <section id="achievements" className="py-32 px-6">
-      <div className="max-w-6xl mx-auto">
-        <SectionHeading
-          eyebrow="02 / Highlights"
-          title="Wins & Recognition"
-          description="A few moments that validate the builder mindset — IEEE peer review, hackathon wins, and academic standing."
-        />
+    <div className="relative flex h-full min-h-full flex-col justify-center">
+      <div className="mb-5 flex items-center gap-2">
+        <Sparkles className="h-5 w-5" style={{ color: "var(--accent)" }} />
+        <span
+          className="text-sm uppercase tracking-[0.3em] font-mono"
+          style={{ color: "var(--accent)" }}
+        >
+          Achievements
+        </span>
+      </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {achievements.map((a, i) => (
+      <div className="grid grid-cols-1 gap-5">
+        {ITEMS.map((item, i) => {
+          const Icon = item.icon;
+          return (
             <motion.div
-              key={a.title}
-              initial={{ opacity: 0, y: 40, rotateX: -8 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: i * 0.06, ease: "easeOut" }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="glass p-6 group relative overflow-hidden"
-              style={{ transformPerspective: 1000 }}
+              key={item.label}
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              whileHover={{ x: 4 }}
+              className="glass relative flex items-center gap-4 overflow-hidden rounded-[28px] p-5 md:p-6"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(127,236,193,0.2), rgba(139,92,246,0.2))",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  {a.badge}
-                </div>
-                <span
-                  className="text-xs uppercase tracking-widest font-mono"
-                  style={{ color: "var(--accent)" }}
-                >
-                  {a.year}
-                </span>
-              </div>
-
-              <h3 className="font-display text-xl font-bold mb-2 leading-tight">{a.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--fg-soft)" }}>
-                {a.detail}
-              </p>
-
               <div
-                className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                className={`absolute -left-6 -top-6 h-16 w-16 rounded-full bg-gradient-to-br ${item.accent} opacity-20 blur-xl`}
+              />
+              <div
+                className="relative flex h-16 w-16 flex-none items-center justify-center rounded-2xl"
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(127,236,193,0.3), transparent 70%)",
+                    "linear-gradient(135deg, rgba(127,236,193,0.18), rgba(139,92,246,0.18))",
+                  border: "1px solid var(--border)",
                 }}
-              />
+              >
+                <Icon
+                  className="h-7 w-7"
+                  style={{ color: "var(--accent)" }}
+                />
+              </div>
+              <div className="relative min-w-0 flex-1">
+                <div
+                  className="font-display text-2xl font-bold leading-tight"
+                  style={{ color: "var(--fg)" }}
+                >
+                  {item.label}
+                </div>
+                <div
+                  className="mt-1 text-base leading-snug"
+                  style={{ color: "var(--fg-soft)" }}
+                >
+                  {item.detail}
+                </div>
+              </div>
             </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-10 glass p-6 flex items-center gap-4"
-        >
-          <Trophy className="w-8 h-8" style={{ color: "var(--accent)" }} />
-          <div>
-            <div className="font-display font-bold">Builder mentality, validated.</div>
-            <div className="text-sm" style={{ color: "var(--fg-soft)" }}>
-              Time-constrained competition + peer-reviewed research + sustained academic standing.
-            </div>
-          </div>
-        </motion.div>
+          );
+        })}
       </div>
-    </section>
+    </div>
   );
 }

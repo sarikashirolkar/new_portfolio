@@ -39,7 +39,21 @@ npm run build
    - Build command: `npm run build`
    - Build output directory: `out`
 4. Bind Workers AI: **Settings → Functions → Bindings → Workers AI** → variable name `AI`.
-5. Custom domain: **Settings → Custom domains → Set up** → enter `sarika.aiworkflowautomate.com`. Cloudflare will auto-add the DNS record because the parent zone is already in your account.
+5. Configure the chatbot under **Settings → Environment variables**:
+   - `GEMINI_API_KEY`: Google Gemini API key for Sarika's low-cost portfolio assistant
+   - `GEMINI_MODEL`: optional model override, defaults to `gemini-2.5-flash-lite`
+   - `OPENAI_API_KEY`: optional OpenAI fallback
+   - `OPENAI_MODEL`: optional OpenAI model override, defaults to `gpt-5-mini`
+
+6. Contact form delivery currently posts to the Google Apps Script endpoint used by the old portfolio. That script should be deployed from `sarikasharada123@gmail.com` and send notifications to `sarikashirolkar@gmail.com`.
+   To override it at build time, set:
+   - `NEXT_PUBLIC_CONTACT_API_URL`: contact form endpoint
+
+   If you use the Cloudflare `/api/contact` function instead, configure:
+   - `RESEND_API_KEY`: Resend API key
+   - `CONTACT_TO_EMAIL`: `sarikashirolkar@gmail.com`
+   - `CONTACT_FROM_EMAIL`: verified sender email in Resend, such as `sarikasharada123@gmail.com` if verified
+7. Custom domain: **Settings → Custom domains → Set up** → enter `sarika.aiworkflowautomate.com`. Cloudflare will auto-add the DNS record because the parent zone is already in your account.
 
 ## Replacing the headshot
 

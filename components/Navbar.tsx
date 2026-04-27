@@ -4,12 +4,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
-  { label: "Profile", href: "#about" },
-  { label: "Achievements", href: "#achievements" },
-  { label: "Shipped", href: "#shipped" },
-  { label: "Experience", href: "#experience" },
+  { label: "Home", href: "#top" },
+  { label: "Work", href: "#work" },
   { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "Connect", href: "#connect" },
 ];
 
 export function Navbar() {
