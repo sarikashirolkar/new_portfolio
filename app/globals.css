@@ -12,6 +12,30 @@
 }
 
 @font-face {
+  font-family: "Brixton";
+  src: url("/fonts/Brixton-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Brixton";
+  src: url("/fonts/Brixton-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Brixton";
+  src: url("/fonts/Brixton-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Silver Garden";
   src: url("/fonts/Silver-Garden.otf") format("opentype");
   font-weight: 400;
@@ -52,8 +76,9 @@
   --accent-2: #8b5cf6;
   --border: rgba(56, 232, 178, 0.18);
   --card: rgba(10, 20, 45, 0.65);
-  --font-display: "Silute", Georgia, serif;
-  --font-accent: "Silute", Georgia, serif;
+  --font-name: "Silute", Georgia, serif;
+  --font-display: "Brixton", Georgia, serif;
+  --font-accent: "Brixton", Georgia, serif;
   --font-sans: "Silver Garden", Verdana, Geneva, system-ui, sans-serif;
   --font-mono: "Silver Garden", Verdana, Geneva, system-ui, sans-serif;
 }
@@ -101,6 +126,10 @@ a {
 
 .font-accent {
   font-family: var(--font-accent);
+}
+
+.font-name {
+  font-family: var(--font-name);
 }
 
 ::selection {

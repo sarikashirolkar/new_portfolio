@@ -18,6 +18,7 @@ const config: Config = {
         },
       },
       fontFamily: {
+        name: ["var(--font-name)", "Georgia", "serif"],
         display: ["var(--font-display)", "Georgia", "serif"],
         accent: ["var(--font-accent)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "Verdana", "system-ui", "sans-serif"],

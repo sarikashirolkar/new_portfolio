@@ -219,7 +219,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
   }
 
   const panel = (
-    <div className="flex h-full min-h-0 max-h-full flex-col overflow-hidden rounded-[18px] border" style={{ borderColor: "var(--border)", background: "rgba(6, 14, 34, 0.58)" }}>
+    <div className="flex h-full min-h-0 max-h-full flex-col overflow-hidden border" style={{ borderColor: "rgba(127,236,193,0.24)", background: "#071331" }}>
       <div className="flex items-center gap-2.5 border-b px-4 py-3" style={{ borderColor: "var(--border)" }}>
         <div
           className="flex h-8 w-8 flex-none items-center justify-center rounded-full"
