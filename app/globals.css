@@ -100,11 +100,9 @@
   --accent-2: #8b5cf6;
   --border: rgba(56, 232, 178, 0.18);
   --card: rgba(10, 20, 45, 0.65);
-  --font-name: "Nectarine", Arial, Helvetica, sans-serif;
-  --font-display: "Times New Roman", Times, serif;
-  --font-accent: "Times New Roman", Times, serif;
-  --font-sans: "Times New Roman", Times, serif;
-  --font-mono: "Times New Roman", Times, serif;
+  --font-name: var(--font-display), Ubuntu, Arial, Helvetica, sans-serif;
+  --font-accent: var(--font-display), Ubuntu, Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-sans), "Open Sans", Arial, Helvetica, sans-serif;
 }
 
 .light {
@@ -126,7 +124,7 @@ html, body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
-  font-weight: 700;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -161,7 +159,7 @@ a {
 
 .font-name {
   font-family: var(--font-name);
-  font-weight: 400;
+  font-weight: 700;
 }
 
 ::selection {
