@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Silute";
+  src: url("/fonts/Silute.woff2") format("woff2"),
+    url("/fonts/Silute.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silver Garden";
+  src: url("/fonts/Silver-Garden.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silver Garden";
+  src: url("/fonts/Silver-Garden-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silver Garden";
+  src: url("/fonts/Silver-Garden-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Silver Garden";
+  src: url("/fonts/Silver-Garden-Bold-Italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --bg: #02050f;
   --bg-soft: #050b1c;
@@ -11,10 +52,10 @@
   --accent-2: #8b5cf6;
   --border: rgba(56, 232, 178, 0.18);
   --card: rgba(10, 20, 45, 0.65);
-  --font-display: "Yeseva One", "Cooper Black", Georgia, serif;
-  --font-accent: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-sans: Verdana, Geneva, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Silute", Georgia, serif;
+  --font-accent: "Silute", Georgia, serif;
+  --font-sans: "Silver Garden", Verdana, Geneva, system-ui, sans-serif;
+  --font-mono: "Silver Garden", Verdana, Geneva, system-ui, sans-serif;
 }
 
 .light {

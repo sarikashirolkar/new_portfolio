@@ -21,7 +21,7 @@ const config: Config = {
         display: ["var(--font-display)", "Georgia", "serif"],
         accent: ["var(--font-accent)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "Verdana", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        mono: ["var(--font-mono)", "Verdana", "system-ui", "sans-serif"],
       },
       animation: {
         "aurora-shift": "auroraShift 18s ease-in-out infinite",
