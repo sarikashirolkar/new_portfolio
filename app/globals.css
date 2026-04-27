@@ -12,6 +12,14 @@
 }
 
 @font-face {
+  font-family: "Nectarine";
+  src: url("/fonts/Nectarine-DEMO.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Brixton";
   src: url("/fonts/Brixton-Book.ttf") format("truetype");
   font-weight: 400;
@@ -92,7 +100,7 @@
   --accent-2: #8b5cf6;
   --border: rgba(56, 232, 178, 0.18);
   --card: rgba(10, 20, 45, 0.65);
-  --font-name: Arial, Helvetica, sans-serif;
+  --font-name: "Nectarine", Arial, Helvetica, sans-serif;
   --font-display: Arial, Helvetica, sans-serif;
   --font-accent: Arial, Helvetica, sans-serif;
   --font-sans: "Times New Roman", Times, serif;
@@ -118,6 +126,7 @@ html, body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
+  font-weight: 700;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -128,7 +137,13 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display);
+  font-weight: 700;
   letter-spacing: 0;
+}
+
+.font-accent {
+  font-family: var(--font-accent);
+  font-weight: 700;
 }
 
 p,
@@ -141,11 +156,12 @@ a {
 }
 
 .font-accent {
-  font-family: var(--font-accent);
+  font-weight: 700;
 }
 
 .font-name {
   font-family: var(--font-name);
+  font-weight: 400;
 }
 
 ::selection {

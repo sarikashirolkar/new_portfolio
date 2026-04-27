@@ -46,7 +46,7 @@ export function Hero() {
               </div>
 
               <h1
-                className="mt-8 font-name text-6xl font-normal leading-[0.98] md:text-7xl xl:text-[7rem]"
+                className="mt-8 font-name text-6xl leading-[0.98] md:text-7xl xl:text-[7rem]"
                 style={{
                   color: "var(--fg)",
                   textShadow:
