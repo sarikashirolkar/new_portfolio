@@ -31,7 +31,7 @@ export function WorkRow() {
         >
           <div className="mb-3 px-2">
             <div
-              className="font-display text-xl font-semibold"
+              className="font-accent text-2xl font-semibold"
               style={{ color: "var(--fg)" }}
             >
               RAG Chatbot

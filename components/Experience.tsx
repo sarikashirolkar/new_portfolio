@@ -28,7 +28,7 @@ export function Experience() {
             </span>
           </div>
           <h3
-            className="mt-4 font-display text-4xl font-bold leading-tight md:text-5xl xl:text-6xl"
+            className="mt-4 font-display text-4xl font-normal leading-tight md:text-5xl xl:text-6xl"
             style={{ color: "var(--fg)" }}
           >
             Work
@@ -84,7 +84,7 @@ export function Experience() {
                       {e.period}
                     </div>
                     <div
-                      className="mt-2 font-display text-2xl font-bold leading-tight"
+                      className="mt-2 font-accent text-3xl font-semibold leading-tight"
                       style={{ color: "var(--fg)" }}
                     >
                       {e.role}

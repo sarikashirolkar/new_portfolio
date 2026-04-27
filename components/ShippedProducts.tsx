@@ -44,7 +44,7 @@ export function ShippedProducts() {
                   </span>
                 </div>
 
-                <h3 className="font-display text-3xl font-bold mb-4 flex items-start justify-between gap-3">
+                <h3 className="font-accent mb-4 flex items-start justify-between gap-3 text-3xl font-semibold">
                   <span>{p.title}</span>
                   <ExternalLink className="w-5 h-5 mt-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: "var(--accent)" }} />
                 </h3>

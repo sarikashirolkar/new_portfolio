@@ -18,7 +18,7 @@ export function Skills() {
       </div>
 
       <h3
-        className="mb-4 font-display text-2xl font-bold"
+        className="font-accent mb-4 text-3xl font-semibold"
         style={{ color: "var(--fg)" }}
       >
         Skills &amp; Techstack

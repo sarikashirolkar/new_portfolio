@@ -97,7 +97,7 @@ function Stat({ label, value, hint }: { label: string; value: string; hint: stri
       <div className="text-xs uppercase tracking-widest" style={{ color: "var(--fg-soft)" }}>
         {label}
       </div>
-      <div className="font-display text-2xl font-bold mt-1 aurora-text">{value}</div>
+      <div className="font-accent mt-1 text-3xl font-semibold aurora-text">{value}</div>
       <div className="text-xs mt-0.5" style={{ color: "var(--fg-soft)" }}>
         {hint}
       </div>

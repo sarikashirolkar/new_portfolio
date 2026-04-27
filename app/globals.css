@@ -11,8 +11,9 @@
   --accent-2: #8b5cf6;
   --border: rgba(56, 232, 178, 0.18);
   --card: rgba(10, 20, 45, 0.65);
-  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Yeseva One", "Cooper Black", Georgia, serif;
+  --font-accent: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: Verdana, Geneva, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
@@ -38,6 +39,27 @@ html, body {
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
   overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0;
+}
+
+p,
+li,
+input,
+textarea,
+button,
+a {
+  letter-spacing: 0;
+}
+
+.font-accent {
+  font-family: var(--font-accent);
 }
 
 ::selection {

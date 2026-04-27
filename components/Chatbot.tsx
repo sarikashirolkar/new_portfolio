@@ -228,7 +228,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
           <Sparkles className="h-4 w-4 text-[#08102a]" />
         </div>
         <div className="min-w-0">
-          <div className="font-display text-sm font-bold" style={{ color: "var(--fg)" }}>
+          <div className="font-accent text-xl font-semibold leading-none" style={{ color: "var(--fg)" }}>
             Sarika&apos;s Assistant — a RAG Chatbot
           </div>
           <div className="text-xs" style={{ color: "var(--fg-soft)" }}>

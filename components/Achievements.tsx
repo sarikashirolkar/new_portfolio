@@ -81,7 +81,7 @@ export function Achievements() {
               </div>
               <div className="relative min-w-0 flex-1">
                 <div
-                  className="font-display text-2xl font-bold leading-tight"
+                  className="font-accent text-3xl font-semibold leading-tight"
                   style={{ color: "var(--fg)" }}
                 >
                   {item.label}

@@ -19,7 +19,7 @@ export function SkillsRow() {
         </div>
 
         <h3
-          className="mb-10 font-display text-4xl font-bold md:text-5xl xl:text-6xl"
+          className="mb-10 font-display text-4xl font-normal md:text-5xl xl:text-6xl"
           style={{ color: "var(--fg)" }}
         >
           Skills &amp; <span className="aurora-text">Techstack</span>

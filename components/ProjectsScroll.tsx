@@ -45,7 +45,7 @@ export function ProjectsScroll({ projects }: { projects: EnrichedProject[] }) {
             Build Log
           </div>
           <h3
-            className="font-display text-4xl font-bold md:text-5xl"
+            className="font-display text-4xl font-normal md:text-5xl"
             style={{ color: "var(--fg)" }}
           >
             Projects from GitHub
@@ -126,7 +126,7 @@ export function ProjectsScroll({ projects }: { projects: EnrichedProject[] }) {
               </div>
 
               <h4
-                className="font-display text-3xl font-bold leading-tight"
+                className="font-accent text-3xl font-semibold leading-tight"
                 style={{ color: "var(--fg)" }}
               >
                 {p.title}

@@ -102,7 +102,7 @@ export function Contact() {
           >
             Let&apos;s build together
           </div>
-          <h2 className="relative mt-4 font-display text-5xl font-bold leading-tight tracking-tight md:text-6xl">
+          <h2 className="relative mt-4 font-display text-5xl font-normal leading-tight md:text-6xl">
             <span className="aurora-text">Let&apos;s connect!</span>
           </h2>
           <p
@@ -155,7 +155,7 @@ export function Contact() {
                 <p className="text-xs uppercase tracking-[0.28em]" style={{ color: "var(--accent)" }}>
                   Let&apos;s connect
                 </p>
-                <h3 id="connect-panel-title" className="mt-2 font-display text-3xl font-semibold">
+                <h3 id="connect-panel-title" className="font-accent mt-2 text-4xl font-semibold">
                   Connection Details
                 </h3>
               </div>

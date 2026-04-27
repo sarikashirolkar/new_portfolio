@@ -25,7 +25,7 @@ export function Navbar() {
         className="max-w-7xl mx-auto flex items-center justify-between gap-4 rounded-[24px] border px-5 py-4 glass"
         data-taskbar="true"
       >
-        <a href="#top" className="min-w-[120px] font-display font-bold text-xl tracking-tight">
+        <a href="#top" className="min-w-[120px] font-display text-xl font-normal">
           <span className="aurora-text">Sarika</span>
         </a>
 

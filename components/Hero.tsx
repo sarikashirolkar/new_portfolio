@@ -46,7 +46,7 @@ export function Hero() {
               </div>
 
               <h1
-                className="mt-8 font-display text-6xl font-bold leading-[0.98] tracking-tight md:text-7xl xl:text-[7rem]"
+                className="mt-8 font-display text-6xl font-normal leading-[0.98] md:text-7xl xl:text-[7rem]"
                 style={{
                   color: "var(--fg)",
                   textShadow:
@@ -67,7 +67,7 @@ export function Hero() {
               </h1>
 
               <p
-                className="mt-5 font-display text-3xl leading-tight md:text-4xl"
+                className="font-accent mt-5 text-3xl font-semibold leading-tight md:text-4xl"
                 style={{
                   color: "var(--fg)",
                   textShadow: "0 0 26px rgba(8, 16, 42, 0.85)",
