@@ -220,7 +220,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
 
   const panel = (
     <div className="flex h-full min-h-0 max-h-full flex-col overflow-hidden border" style={{ borderColor: "rgba(127,236,193,0.24)", background: "#071331" }}>
-      <div className="flex items-center gap-2.5 border-b px-4 py-3" style={{ borderColor: "var(--border)" }}>
+      <div className="flex items-center gap-2.5 border-b px-3 py-2.5" style={{ borderColor: "var(--border)" }}>
         <div
           className="flex h-8 w-8 flex-none items-center justify-center rounded-full"
           style={{ background: "linear-gradient(135deg, #7fecc1, #6d4ad6)" }}
@@ -229,7 +229,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
         </div>
         <div className="min-w-0">
           <div className="font-accent text-xl font-semibold leading-none" style={{ color: "var(--fg)" }}>
-            Sarika&apos;s Assistant — a RAG Chatbot
+            Sarika&apos;s Assistant
           </div>
           <div className="text-xs" style={{ color: "var(--fg-soft)" }}>
             Ask a question or choose a prompt.
@@ -237,7 +237,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
         </div>
       </div>
 
-      <div ref={scrollRef} className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-4 py-3">
+      <div ref={scrollRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 py-2.5">
         {messages.map((m, i) => (
           <motion.div
             key={i}
@@ -246,7 +246,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
             className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "rounded-br-sm" : "rounded-bl-sm"}`}
+              className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-xs leading-relaxed md:text-sm ${m.role === "user" ? "rounded-br-sm" : "rounded-bl-sm"}`}
               style={
                 m.role === "user"
                   ? {
@@ -282,7 +282,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
         {loading && (
           <div className="flex justify-start">
             <div
-              className="flex gap-1 rounded-2xl rounded-bl-sm px-4 py-3"
+              className="flex gap-1 rounded-2xl rounded-bl-sm px-3 py-2.5"
               style={{ background: "rgba(127,236,193,0.08)", border: "1px solid var(--border)" }}
             >
               {[0, 1, 2].map((i) => (
@@ -307,7 +307,7 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
               <button
                 key={s}
                 onClick={() => send(s)}
-                className="w-full rounded-xl px-3 py-1.5 text-left text-xs transition-colors md:text-sm"
+                className="w-full rounded-xl px-3 py-1.5 text-left text-xs transition-colors"
                 style={{
                   background: "rgba(127,236,193,0.05)",
                   border: "1px solid var(--border)",
@@ -326,14 +326,14 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
           e.preventDefault();
           send(input);
         }}
-        className="flex items-center gap-2 border-t px-3 py-2.5"
+        className="flex items-center gap-2 border-t px-3 py-2"
         style={{ borderColor: "var(--border)" }}
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask anything about Sarika..."
-          className="min-w-0 flex-1 bg-transparent px-2 py-1.5 text-sm outline-none"
+          className="min-w-0 flex-1 bg-transparent px-2 py-1.5 text-xs outline-none md:text-sm"
           style={{ color: "var(--fg)" }}
           disabled={loading}
         />
