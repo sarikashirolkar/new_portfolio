@@ -18,11 +18,11 @@ const config: Config = {
         },
       },
       fontFamily: {
-        name: ["var(--font-name)", "Georgia", "serif"],
-        display: ["var(--font-display)", "Georgia", "serif"],
-        accent: ["var(--font-accent)", "Georgia", "serif"],
-        sans: ["var(--font-sans)", "Verdana", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "Verdana", "system-ui", "sans-serif"],
+        name: ["var(--font-name)", "Arial", "Helvetica", "sans-serif"],
+        display: ["var(--font-display)", "Arial", "Helvetica", "sans-serif"],
+        accent: ["var(--font-accent)", "Arial", "Helvetica", "sans-serif"],
+        sans: ["var(--font-sans)", "Times New Roman", "Times", "serif"],
+        mono: ["var(--font-mono)", "Arial", "Helvetica", "sans-serif"],
       },
       animation: {
         "aurora-shift": "auroraShift 18s ease-in-out infinite",
