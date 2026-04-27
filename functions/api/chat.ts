@@ -59,18 +59,19 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_INPUT_CHARS) }));
 
     if (ctx.env.GEMINI_API_KEY) {
-      const model = ctx.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+      const model = (ctx.env.GEMINI_MODEL || "gemini-2.5-flash-lite")
+        .trim()
+        .replace(/^models\//, "")
+        .replace(/^["']|["']$/g, "");
       const geminiRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(ctx.env.GEMINI_API_KEY)}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-goog-api-key": ctx.env.GEMINI_API_KEY,
           },
           body: JSON.stringify({
             systemInstruction: {
-              role: "system",
               parts: [{ text: ASSISTANT_INSTRUCTIONS }],
             },
             contents: trimmed.map((m) => ({
