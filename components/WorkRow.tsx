@@ -16,6 +16,16 @@ export function WorkRow() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6 }}
+          className="flex h-[560px] min-h-0 items-stretch xl:h-[620px]"
+        >
+          <Achievements />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="glass flex min-h-[560px] flex-col rounded-[28px] p-4 md:p-5"
           style={{ background: "rgba(10, 20, 45, 0.48)" }}
         >
@@ -33,16 +43,6 @@ export function WorkRow() {
           <div className="min-h-0 flex-1">
             <Chatbot embedded />
           </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex min-h-[560px] items-stretch"
-        >
-          <Achievements />
         </motion.div>
       </div>
     </section>
