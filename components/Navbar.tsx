@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import { Bot } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
@@ -14,6 +15,10 @@ export function Navbar() {
   const { scrollY } = useScroll();
   const blur = useTransform(scrollY, [0, 200], [0, 12]);
   const bg = useTransform(scrollY, [0, 200], ["rgba(8,16,42,0.35)", "rgba(8,16,42,0.7)"]);
+  const openAssistant = () => {
+    window.dispatchEvent(new CustomEvent("open-chatbot"));
+    window.history.replaceState(null, "", "#assistant");
+  };
 
   return (
     <motion.nav
@@ -42,7 +47,16 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="flex min-w-[120px] justify-end">
+        <div className="flex min-w-[120px] items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={openAssistant}
+            className="flex h-9 items-center gap-2 rounded-full border px-3 text-sm transition-colors hover:text-aurora-mint"
+            style={{ borderColor: "var(--border)", color: "var(--fg-soft)" }}
+          >
+            <Bot className="h-4 w-4" />
+            <span className="hidden lg:inline">AI Assistant</span>
+          </button>
           <ThemeToggle />
         </div>
       </motion.div>
