@@ -27,26 +27,25 @@ export function WorkRow() {
   return (
     <section
       id="work"
-      className="relative flex min-h-screen items-center overflow-hidden bg-[#f4f4f1] px-4 py-20 text-[#111827] md:px-8"
+      className="relative flex min-h-screen items-center overflow-hidden px-5 py-20 md:px-8"
     >
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 -z-10 opacity-35"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(17,24,39,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(17,24,39,0.06) 1px, transparent 1px)",
-          backgroundSize: "67px 67px",
+            "linear-gradient(rgba(127,236,193,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(127,236,193,0.08) 1px, transparent 1px)",
+          backgroundSize: "86px 86px",
         }}
       />
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 -z-10"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(17,24,39,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(17,24,39,0.04) 1px, transparent 1px)",
-          backgroundSize: "33.5px 33.5px",
+          background:
+            "radial-gradient(circle at 18% 22%, rgba(127,236,193,0.12), transparent 34%), radial-gradient(circle at 78% 74%, rgba(139,92,246,0.14), transparent 36%)",
         }}
       />
 
-      <div className="relative mx-auto w-full max-w-7xl border-2 border-[#222] px-6 py-12 md:px-12 md:py-16">
+      <div className="relative mx-auto w-full max-w-7xl px-1 py-12 md:px-6 md:py-16">
         <div className="grid min-h-[560px] gap-x-10 gap-y-16 md:grid-cols-2">
           {MILESTONES.map((item, index) => (
             <motion.article
@@ -66,7 +65,7 @@ export function WorkRow() {
                 />
               </div>
               <div className="max-w-xl text-center font-display text-lg font-bold leading-tight sm:text-left md:text-xl">
-                <span className="box-decoration-clone bg-[#090e1f] px-1 text-[#f8fbff]">
+                <span className="box-decoration-clone bg-[#090e1f]/85 px-1 text-[#f8fbff] shadow-[0_0_24px_rgba(127,236,193,0.14)]">
                   {item.title}
                   <br />
                   {item.detail}
