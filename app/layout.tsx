@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Open_Sans, Ubuntu } from "next/font/google";
+import { Open_Sans, Space_Grotesk, Ubuntu } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -13,6 +13,12 @@ const body = Open_Sans({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
   variable: "--font-sans",
+});
+
+const nav = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-nav",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +36,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${heading.variable} ${body.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${heading.variable} ${body.variable} ${nav.variable}`}>
       <body>
         <Providers>{children}</Providers>
       </body>

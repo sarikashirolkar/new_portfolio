@@ -73,44 +73,45 @@ export function Contact() {
 
   return (
     <section id="connect" className="relative px-5 py-20 md:px-8 md:py-28">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-4xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
-          className="glass relative overflow-hidden rounded-[28px] px-6 py-16 text-center md:px-12 md:py-24"
+          className="relative overflow-hidden rounded-[18px] border px-5 py-10 text-center shadow-[0_20px_54px_rgba(2,5,15,0.42),0_0_54px_rgba(127,236,193,0.1)] md:px-8 md:py-14"
+          style={{
+            background: "rgba(0,0,0,0.78)",
+            borderColor: "rgba(127,236,193,0.18)",
+          }}
         >
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(127,236,193,0.12),transparent_42%),radial-gradient(circle_at_80%_72%,rgba(139,92,246,0.12),transparent_36%)]" />
           <div
-            className="pointer-events-none absolute -left-32 -top-32 h-72 w-72 rounded-full blur-3xl"
+            className="relative text-xs uppercase tracking-[0.32em] md:text-sm"
             style={{
-              background:
-                "radial-gradient(circle, rgba(127,236,193,0.35), transparent 70%)",
+              color: "#7fecc1",
+              textShadow: "0 0 20px rgba(127,236,193,0.48)",
             }}
-          />
-          <div
-            className="pointer-events-none absolute -right-32 -bottom-32 h-72 w-72 rounded-full blur-3xl"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(139,92,246,0.35), transparent 70%)",
-            }}
-          />
-
-          <div
-            className="relative text-xs uppercase tracking-[0.3em]"
-            style={{ color: "var(--accent)" }}
           >
             Let&apos;s build together
           </div>
-          <h2 className="relative mt-4 font-display text-5xl font-normal leading-tight md:text-6xl">
-            <span className="aurora-text">Let&apos;s connect!</span>
+          <h2 className="relative mt-4 font-display text-5xl font-normal leading-tight md:text-6xl xl:text-7xl">
+            <span
+              className="aurora-text"
+              style={{ textShadow: "0 0 42px rgba(127,236,193,0.45)" }}
+            >
+              Let&apos;s connect!
+            </span>
           </h2>
           <p
-            className="relative mx-auto mt-5 max-w-xl text-base md:text-lg"
-            style={{ color: "var(--fg-soft)" }}
+            className="relative mx-auto mt-5 max-w-2xl font-display text-3xl leading-tight md:text-4xl"
+            style={{
+              color: "#efe8d7",
+              textShadow:
+                "0 0 28px rgba(239,232,215,0.28), 0 0 46px rgba(139,92,246,0.25)",
+            }}
           >
-            I&apos;m looking to own and build AI-native products from zero to
-            scale. If that sounds like your team, drop a note.
+            let&apos;s build <span className="aurora-text">something!</span>
           </p>
 
           <motion.button
@@ -118,15 +119,18 @@ export function Contact() {
             onClick={() => setIsPanelOpen(true)}
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.97 }}
-            className="btn-primary relative mt-8 inline-flex"
+            className="btn-primary relative mt-6 inline-flex"
           >
             <Mail className="h-4 w-4" />
             Let&apos;s connect
           </motion.button>
 
           <div
-            className="relative mt-10 text-xs font-mono"
-            style={{ color: "var(--fg-soft)" }}
+            className="relative mt-8 text-xs font-mono md:text-sm"
+            style={{
+              color: "rgba(239,232,215,0.72)",
+              textShadow: "0 0 18px rgba(127,236,193,0.2)",
+            }}
           >
             © {new Date().getFullYear()} Sarika Shirolkar ·{" "}
             {personal.domain}

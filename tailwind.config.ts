@@ -23,6 +23,7 @@ const config: Config = {
         accent: ["var(--font-accent)", "Ubuntu", "Arial", "Helvetica", "sans-serif"],
         sans: ["var(--font-sans)", "Open Sans", "Arial", "Helvetica", "sans-serif"],
         mono: ["var(--font-mono)", "Open Sans", "Arial", "Helvetica", "sans-serif"],
+        nav: ["var(--font-nav)", "Space Grotesk", "Inter", "Arial", "sans-serif"],
       },
       animation: {
         "aurora-shift": "auroraShift 18s ease-in-out infinite",

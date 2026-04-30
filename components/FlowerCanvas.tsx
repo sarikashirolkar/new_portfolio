@@ -53,6 +53,13 @@ const DRIFT = 1;
 const PARALLAX = 1;
 const SIZE_SCALE = 1.12;
 const OPACITY_SCALE = 1.45;
+const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+
+type ResolvedNode = {
+  el: HTMLImageElement;
+  flower: Flower;
+  placement: Placement;
+};
 
 export function FlowerCanvas() {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -61,59 +68,128 @@ export function FlowerCanvas() {
     const root = rootRef.current;
     if (!root) return;
 
-    const nodes: Record<string, HTMLImageElement> = {};
+    const flowerById = new Map(FLOWERS.map((f) => [f.id, f]));
+    const resolved: ResolvedNode[] = [];
+
     for (const placement of PLACEMENTS) {
-      const flower = FLOWERS.find((item) => item.id === placement.id);
+      const flower = flowerById.get(placement.id);
       if (!flower) continue;
 
       const img = document.createElement("img");
       img.src = flower.src;
       img.alt = "";
       img.draggable = false;
+      img.decoding = "async";
+      img.loading = "eager";
       img.style.cssText =
-        "position:absolute;left:0;top:0;will-change:transform,opacity,filter;user-select:none;opacity:0;";
+        "position:absolute;left:0;top:0;height:auto;will-change:transform,opacity;user-select:none;opacity:0;contain:layout paint;";
+      if (placement.blur > 0) {
+        img.style.filter = `blur(${placement.blur}px)`;
+      }
       root.appendChild(img);
-      nodes[placement.id] = img;
+      resolved.push({ el: img, flower, placement });
     }
 
-    let scrollPx = 0;
-    const updateScroll = () => {
-      scrollPx = window.scrollY || document.documentElement.scrollTop || 0;
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    let minDim = Math.min(w, h);
+    let scrollPx = window.scrollY || document.documentElement.scrollTop || 0;
+    let maxScroll = Math.max(1, document.documentElement.scrollHeight - h);
+    let projectsTop = Number.POSITIVE_INFINITY;
+    let projectsBottom = Number.NEGATIVE_INFINITY;
+    const projectsEl = document.getElementById("projects");
+
+    const applySizes = () => {
+      for (const node of resolved) {
+        const sizePx = minDim * node.flower.base * node.placement.scale * SIZE_SCALE;
+        node.el.style.width = `${sizePx}px`;
+      }
     };
-    updateScroll();
-    window.addEventListener("scroll", updateScroll, { passive: true });
+
+    const refreshProjectsRect = () => {
+      if (!projectsEl) return;
+      const rect = projectsEl.getBoundingClientRect();
+      projectsTop = rect.top;
+      projectsBottom = rect.bottom;
+    };
+
+    applySizes();
+    refreshProjectsRect();
+
+    const onResize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      minDim = Math.min(w, h);
+      maxScroll = Math.max(1, document.documentElement.scrollHeight - h);
+      applySizes();
+      refreshProjectsRect();
+    };
+
+    const onScroll = () => {
+      scrollPx = window.scrollY || document.documentElement.scrollTop || 0;
+      refreshProjectsRect();
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    let visible = true;
+    const onVisibility = () => {
+      visible = document.visibilityState !== "hidden";
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     let rafId = 0;
     const start = performance.now();
     const tick = (now: number) => {
+      if (!visible) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
       const elapsed = (now - start) / 1000;
       const tNorm = (elapsed / LOOP_SEC) % 1;
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const minDim = Math.min(w, h);
+      const bottomReturn = clamp01((scrollPx - maxScroll * 0.62) / (maxScroll * 0.2));
+      const parallaxScroll =
+        scrollPx * (1 - bottomReturn) + (scrollPx % (h * 1.15)) * bottomReturn;
+      const topFade = Math.max(0.15, 1 - scrollPx / (h * 1.5));
+      const bottomFade = 0.18 + bottomReturn * 0.72;
+      const scrollFade = Math.max(topFade, bottomFade);
 
-      for (const placement of PLACEMENTS) {
-        const node = nodes[placement.id];
-        const flower = FLOWERS.find((item) => item.id === placement.id);
-        if (!node || !flower) continue;
+      let projectOverlap = 0;
+      if (projectsTop !== Number.POSITIVE_INFINITY) {
+        projectOverlap =
+          clamp01((h * 0.72 - projectsTop) / (h * 0.24)) *
+          clamp01((projectsBottom - h * 0.28) / (h * 0.24));
+      }
+      const sectionFade = 1 - projectOverlap;
+      const opacityFade = scrollFade * sectionFade * OPACITY_SCALE;
+
+      for (let i = 0; i < resolved.length; i++) {
+        const { el, flower, placement } = resolved[i];
 
         const angle = (tNorm + placement.phase) * TAU;
         const dx = Math.sin(angle) * placement.driftX * DRIFT;
-        const dyLoop = Math.cos(angle + placement.phase * TAU * 0.5) * placement.driftY * DRIFT;
-        const rotLoop = Math.sin(angle + placement.phase * TAU * 0.7) * placement.rotDeg * DRIFT;
-        const breath = 1 + Math.cos(angle + placement.phase * TAU * 0.3) * placement.breath;
-        const parallaxY = -scrollPx * placement.depth * PARALLAX;
-        const scrollRot = scrollPx * 0.02 * placement.depth * PARALLAX;
-        const scrollFade = Math.max(0.15, 1 - scrollPx / (h * 1.5));
+        const dyLoop =
+          Math.cos(angle + placement.phase * TAU * 0.5) *
+          placement.driftY *
+          DRIFT;
+        const rotLoop =
+          Math.sin(angle + placement.phase * TAU * 0.7) *
+          placement.rotDeg *
+          DRIFT;
+        const breath =
+          1 + Math.cos(angle + placement.phase * TAU * 0.3) * placement.breath;
+        const parallaxY = -parallaxScroll * placement.depth * PARALLAX;
+        const scrollRot = parallaxScroll * 0.02 * placement.depth * PARALLAX;
         const sizePx = minDim * flower.base * placement.scale * SIZE_SCALE;
         const tx = placement.x * w + dx - sizePx / 2;
         const ty = placement.y * h + dyLoop + parallaxY - sizePx / 2;
 
-        node.style.width = `${sizePx}px`;
-        node.style.height = "auto";
-        node.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${rotLoop + scrollRot}deg) scale(${breath})`;
-        node.style.opacity = String(Math.min(1, placement.opacity * OPACITY_SCALE * scrollFade));
-        node.style.filter = placement.blur > 0 ? `blur(${placement.blur}px)` : "";
+        el.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${
+          rotLoop + scrollRot
+        }deg) scale(${breath})`;
+        el.style.opacity = String(Math.min(1, placement.opacity * opacityFade));
       }
 
       rafId = requestAnimationFrame(tick);
@@ -122,8 +198,10 @@ export function FlowerCanvas() {
 
     return () => {
       cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", updateScroll);
-      Object.values(nodes).forEach((node) => node.remove());
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibility);
+      for (const node of resolved) node.el.remove();
     };
   }, []);
 

@@ -219,22 +219,50 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
   }
 
   const panel = (
-    <div className="flex h-full min-h-0 max-h-full flex-col overflow-hidden border" style={{ borderColor: "rgba(127,236,193,0.24)", background: "#071331" }}>
-      <div className="flex items-center gap-2.5 border-b px-3 py-2.5" style={{ borderColor: "var(--border)" }}>
+    <div
+      className="relative flex h-full min-h-0 max-h-full flex-col overflow-hidden border"
+      style={{
+        borderColor: "rgba(244,168,156,0.32)",
+        background:
+          "radial-gradient(circle at 88% -10%, rgba(244,168,156,0.32), transparent 55%), radial-gradient(circle at 6% 110%, rgba(192,132,252,0.26), transparent 60%), linear-gradient(180deg, #0a1838 0%, #07122d 60%, #050b1f 100%)",
+      }}
+    >
+      <div
+        className="flex items-center gap-2.5 border-b px-3 py-2.5"
+        style={{ borderColor: "rgba(244,168,156,0.22)" }}
+      >
         <div
           className="flex h-8 w-8 flex-none items-center justify-center rounded-full"
-          style={{ background: "linear-gradient(135deg, #7fecc1, #6d4ad6)" }}
+          style={{
+            background:
+              "radial-gradient(circle at 30% 28%, #ffeede 0%, #f5b7a4 35%, #c084fc 75%, #6d4ad6 100%)",
+            boxShadow: "0 0 14px rgba(244,168,156,0.55)",
+          }}
         >
-          <Sparkles className="h-4 w-4 text-[#08102a]" />
+          <Sparkles className="h-4 w-4" style={{ color: "#3b1d4a" }} />
         </div>
-        <div className="min-w-0">
-          <div className="font-accent text-xl font-semibold leading-none" style={{ color: "var(--fg)" }}>
+        <div className="min-w-0 flex-1">
+          <div
+            className="font-accent text-xl leading-none"
+            style={{ color: "#fff5ec" }}
+          >
             Sarika&apos;s Assistant
           </div>
-          <div className="text-xs" style={{ color: "var(--fg-soft)" }}>
+          <div
+            className="text-xs"
+            style={{ color: "rgba(244,168,156,0.85)" }}
+          >
             Ask a question or choose a prompt.
           </div>
         </div>
+        <span
+          className="ml-2 inline-block h-2 w-2 flex-none rounded-full"
+          style={{
+            background: "#7fecc1",
+            boxShadow: "0 0 10px rgba(127,236,193,0.85)",
+          }}
+          aria-label="online"
+        />
       </div>
 
       <div ref={scrollRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 py-2.5">
@@ -250,13 +278,17 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
               style={
                 m.role === "user"
                   ? {
-                      background: "linear-gradient(135deg, #7fecc1, #6d4ad6)",
+                      background:
+                        "linear-gradient(135deg, #7fecc1 0%, #6d4ad6 100%)",
                       color: "#08102a",
+                      boxShadow: "0 6px 18px rgba(109,74,214,0.28)",
                     }
                   : {
-                      background: "rgba(127,236,193,0.08)",
-                      border: "1px solid var(--border)",
-                      color: "var(--fg)",
+                      background:
+                        "linear-gradient(180deg, #fff5ec 0%, #ffe4d3 100%)",
+                      border: "1px solid rgba(244,168,156,0.65)",
+                      color: "#2a1538",
+                      boxShadow: "0 6px 18px rgba(2,5,15,0.32)",
                     }
               }
             >
@@ -283,7 +315,11 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
           <div className="flex justify-start">
             <div
               className="flex gap-1 rounded-2xl rounded-bl-sm px-3 py-2.5"
-              style={{ background: "rgba(127,236,193,0.08)", border: "1px solid var(--border)" }}
+              style={{
+                background:
+                  "linear-gradient(180deg, #fff5ec 0%, #ffe4d3 100%)",
+                border: "1px solid rgba(244,168,156,0.65)",
+              }}
             >
               {[0, 1, 2].map((i) => (
                 <motion.span
@@ -291,34 +327,45 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
                   className="h-1.5 w-1.5 rounded-full"
-                  style={{ background: "var(--accent)" }}
+                  style={{ background: "#c084fc" }}
                 />
               ))}
             </div>
           </div>
         )}
 
-        {messages.length === 1 && !loading && (
-          <div className="space-y-1.5 pt-1">
-            <div className="text-xs uppercase tracking-[0.2em]" style={{ color: "var(--fg-soft)" }}>
-              Suggested prompts
-            </div>
-            {SUGGESTIONS.map((s) => (
-              <button
-                key={s}
-                onClick={() => send(s)}
-                className="w-full rounded-xl px-3 py-1.5 text-left text-xs transition-colors"
-                style={{
-                  background: "rgba(127,236,193,0.05)",
-                  border: "1px solid var(--border)",
-                  color: "var(--fg)",
-                }}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
+      </div>
+
+      <div
+        className="flex-none border-t px-2 pb-1 pt-2"
+        style={{ borderColor: "rgba(244,168,156,0.22)" }}
+      >
+        <div
+          className="mb-1.5 px-1 text-[0.62rem] uppercase tracking-[0.22em]"
+          style={{ color: "rgba(244,168,156,0.85)" }}
+        >
+          Suggested
+        </div>
+        <div
+          className="flex gap-1.5 overflow-x-auto pb-1"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {SUGGESTIONS.map((s) => (
+            <button
+              key={s}
+              onClick={() => send(s)}
+              disabled={loading}
+              className="flex-none whitespace-nowrap rounded-full px-3 py-1.5 text-[0.7rem] transition-colors hover:bg-[rgba(244,168,156,0.18)] disabled:opacity-40"
+              style={{
+                background: "rgba(244,168,156,0.08)",
+                border: "1px solid rgba(244,168,156,0.4)",
+                color: "#fff5ec",
+              }}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
       </div>
 
       <form
@@ -327,23 +374,27 @@ export function Chatbot({ embedded = false }: ChatbotProps) {
           send(input);
         }}
         className="flex items-center gap-2 border-t px-3 py-2"
-        style={{ borderColor: "var(--border)" }}
+        style={{ borderColor: "rgba(244,168,156,0.28)" }}
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask anything about Sarika..."
           className="min-w-0 flex-1 bg-transparent px-2 py-1.5 text-xs outline-none md:text-sm"
-          style={{ color: "var(--fg)" }}
+          style={{ color: "#fff5ec" }}
           disabled={loading}
         />
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="flex h-8 w-8 flex-none items-center justify-center rounded-full disabled:opacity-30"
-          style={{ background: "linear-gradient(135deg, #7fecc1, #6d4ad6)" }}
+          className="flex h-8 w-8 flex-none items-center justify-center rounded-full transition-transform hover:scale-105 disabled:opacity-30"
+          style={{
+            background:
+              "radial-gradient(circle at 30% 28%, #ffeede 0%, #f5b7a4 35%, #c084fc 75%, #6d4ad6 100%)",
+            boxShadow: "0 0 14px rgba(244,168,156,0.55)",
+          }}
         >
-          <Send className="h-3.5 w-3.5 text-[#08102a]" />
+          <Send className="h-3.5 w-3.5" style={{ color: "#3b1d4a" }} />
         </button>
       </form>
     </div>
